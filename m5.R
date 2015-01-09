@@ -1,0 +1,11 @@
+#############################################
+#Packae is liscnesed by                     #
+#  KrewnSolotions   /< /? [- \/\/ |\|       #
+#############################################
+
+#This may well be piped in through some bash action...
+#The LRE Analyzer -- Full on Java application
+#http://www.ncbi.nlm.nih.gov/pmc/articles/PMC2716216/
+m5 <- function(gotData){
+  
+}

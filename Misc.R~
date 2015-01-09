@@ -1,0 +1,21 @@
+#############################################
+#Packae is liscnesed by                     #
+#  KrewnSolotions   /< /? [- \/\/ |\|       #
+#############################################
+
+askYesNo <- function() {
+  n <- readline("Would you like to save the image? (Y/N):")
+  if(n == 'Y' | n == 'y' | n == 'yes' | n == 'Yes') {
+    print("Image saved")
+    return(1)
+  } else {
+    print("Image not saved")
+    return(0)
+  }
+}
+
+#Lol what is this function even here for?
+ptf <- function (txtToPrint,outFile){system(paste(paste(paste("echo '",cat(txtToPrint),sep = "",collapse = NULL),"'>",sep = "",collapse = NULL),outFile))}
+#It's so bad.
+
+
