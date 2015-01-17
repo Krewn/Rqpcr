@@ -4,6 +4,7 @@
 #############################################
 library(qpcR)
 library(rgl)
+library(ggplot2)
 
 source("./fits.R")
 source("./qpcrFileIO.R")
