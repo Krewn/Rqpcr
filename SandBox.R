@@ -22,11 +22,11 @@ title(main=names(n)[5])
 
 norms <- list()
 
+
 norms[[1]] <- n[[4]][[1]] #subtract background from foreground
 for(k in 2:length(n[[4]])) {
      norms[[k]] <- (n[[4]][[k]] - n[[2]][[k]])
 }
 
-df <- data.frame(matrix(unlist(norms), nrow=30)) #create data frame for pcrfit
 
 m2(df) #run the second method with the normalized data
