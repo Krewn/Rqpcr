@@ -2,6 +2,12 @@
 #Packae is liscnesed by                     #
 #  KrewnSolotions   /< /? [- \/\/ |\|       #
 #############################################
+
+# packages <- c("ggplot2", "dplyr", "Hmisc", "lme4", "arm", "lattice", "lavaan")
+# if (length(setdiff(packages, rownames(installed.packages()))) > 0) {
+#      install.packages(setdiff(packages, rownames(installed.packages())))  
+# }
+
 library(qpcR)
 library(rgl)
 library(ggplot2)
