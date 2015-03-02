@@ -1,5 +1,5 @@
 #############################################
-#Packae is liscnesed by                     #
+#Packae is liscnesed b+v                    #
 #  KrewnSolotions   /< /? [- \/\/ |\|       #
 #############################################
 
@@ -14,7 +14,7 @@ m2 <- function(df){
      r2 <- list() #R^2 value
      
      for(k in 2:length(df)) { 
-          tryCatch({ 
+          tryCatch({ +
                y <- pcrfit(df, 1, k, l4)
                x <- efficiency(y, plot=FALSE, type="Cy0") #type = method of efficiency estimation
                
@@ -27,26 +27,32 @@ m2 <- function(df){
           }, error = function(err) {
           })
      }
-     
      m2Print(fluo1, gd, ct, r2)
      
      #optional plots
-     # xt <- seq(1, length(unlist(fluo1)))
-     
-     # plot(xt, as.numeric(unlist(fluo1)), ylim=c(-5000,5000), ylab="Initial Fluorescence", xlab="Run Number")
-     # 
-     # smoothScatter(xt, as.numeric(unlist(fluo1)), ylim=c(-5000,5000), ylab="Initial Fluorescence", xlab="Run Number")
-     # 
-     # df1 <- data.frame(x=xt, y=as.numeric(unlist(fluo1)))
-     # ggplot(as.data.frame(df1), aes(x=x, y=y)) + ylab("Initial Template Fluorescence") + xlab("Run Number") + ggtitle("F0 vs Run #") + ylim(c(-5000,5000)) + geom_point(alpha=0.5)
-     
+#      xt <- seq(1, length(unlist(fluo1)))
+#      
+#      plot(xt, as.numeric(unlist(fluo1)), ylim=c(-5000,5000), ylab="Initial Fluorescence", xlab="Run Number")
+#      
+#      smoothScatter(xt, as.numeric(unlist(fluo1)), ylim=c(-5000,5000), ylab="Initial Fluorescence", xlab="Run Number")
+#      
+#      df1 <- data.frame(x=xt, y=as.numeric(unlist(fluo1)))
+#      ggplot(as.data.frame(df1), aes(x=x, y=y)) + ylab("Initial Template Fluorescence") + xlab("Run Number") + ggtitle("F0 vs Run #") + ylim(c(-5000,5000)) + geom_point(alpha=0.5)
+#      
 }
+
+print(fluo1)
+
 
 m2Print <- function(fluo, gd, ct, r2) {
      temp <- list()
-     temp[[1]] <- "Sample, Initial Template Fluorescence, Ct value(according to Guescini), efficiency, R^2 value"
+     temp[[1]] <- "ROX_Plate_3, EvaGreen"
+     temp[[2]] <- "Chamber ID, Gene, Initial Template Fluorescence, Ct value(according to Guescini), efficiency, R^2 value"
      for(k in 1:length(fluo)) {
-          temp[[k+1]] <- paste(gd[[1]][[2]][[k+1]][1], gd[[1]][[2]][[k+1]][2], fluo[[k]], ct[[k]], r2[[k]], sep=", ")
+          temp2 <- paste(gd[[1]][[2]][[k+1]][1], gd[[1]][[2]][[k+1]][2])
+          for(k2 in 1:length(fluo)) {
+               temp[[k+1]] <- paste(temp2, gd[[1]][[1]][[k+1]][[5]], fluo[[k]], ct[[k]], r2[[k]])
+          }
      }
-     writeLines(LOLprint(temp),"test.ddv")
+     writeLines(LOLprint(temp),"test1.ddv")
 }

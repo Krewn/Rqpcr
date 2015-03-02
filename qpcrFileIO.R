@@ -72,6 +72,7 @@ squish <- function(data){		#converts a long list into a fat list
   }
   return(table)
 }
+
 squish2<-function(data){
   table <- list()
   if(names(data) == NULL){

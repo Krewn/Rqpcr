@@ -5,7 +5,7 @@ source("./qpcRsources.R")                   #
 #############################################
 
 gd <- getData()
-LOLprint(gd)
+#LOLprint(gd)
 n <- gdToDf(gd)  
 #for(k in n){print(c(k)}
 #pcrfit(as.data.frame(n[[3]]), cyc=1, 1, start = NULL, offset= 0, weight =NULL ,verbose=TRUE)
@@ -20,13 +20,16 @@ title(main=names(n)[4])
 plot(pcrfit(n[[5]], 1,2,l4))
 title(main=names(n)[5])
 
-norms <- list()
+q <- n[[4]][2:length(n[[4]])] - n[[2]][2:length(n[[2]])]
+q[[1]] <- n[[4]][[1]]
 
+# norms <- list()
+# 
+# norms[[1]] <- n[[4]][[1]] #subtract background from foreground
+# for(k in 2:length(n[[4]])) {
+#      norms[[k]] <- (n[[4]][[k]] - n[[2]][[k]])
+# }
 
-norms[[1]] <- n[[4]][[1]] #subtract background from foreground
-for(k in 2:length(n[[4]])) {
-     norms[[k]] <- (n[[4]][[k]] - n[[2]][[k]])
-}
+# m2(q) #run the second method with the normalized data
 
-
-m2(df) #run the second method with the normalized data
+m5(q)
