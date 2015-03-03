@@ -87,22 +87,3 @@ plotSHIT <- function(thingy) {
           
 }
 
-fixSHIT <- function() {
-     tempGENES <- list()
-     temp33 <- list()
-     for(k in 2:length(gd[[1]][[1]])) {
-          temp33[[k-1]] <- gd[[1]][[1]][[k]][1]
-     }
-     
-     temp33 <- gsub("A", "D", temp33)
-     
-     for(k in 1:length(temp33)) {
-          for(k2 in 1:length(temp33)) {
-               if(temp33[[k2]] == gd[[1]][[1]][[k+1]][1])
-                    tempGENES[[k]] <- temp33[[k2]]
-          }
-          print(paste(k, "/", length(temp33)))
-     }
-     return(tempGENES)
-}
-
