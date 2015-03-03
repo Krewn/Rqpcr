@@ -26,7 +26,6 @@ m5 <- function(data1){
   for(k in 1:length(Eff)) {
        Efficiency[[k]] <- sDeviation(Eff[[k]], 4)
        temp2[[k]] <- Cq
-       print(temp2[[k]])
 #        print(Efficiency[[k]])
   }
   
@@ -35,7 +34,9 @@ m5 <- function(data1){
 #        print(F0[[k]])
   }
 
-  printSHIT(F0)
+   printSHIT(F0)
+#    plotSHIT(F0)
+
 }
 
 sDeviation <- function(values, width) {
@@ -61,10 +62,47 @@ sDeviation <- function(values, width) {
 
 printSHIT <- function(thingy) {
      container <- list()
+     container[[1]] <- "Method: LinRegPCR"
+     container[[2]] <- paste("Chamber ID", "Gene", "Initial Template Fluorescence", sep=",")
      for(k in 1:length(thingy)) {
           temp223 <- paste(gd[[1]][[2]][[k+1]][1], gd[[1]][[2]][[k+1]][2], sep="-")
-          container[[k+1]] <- paste(temp223, thingy[[k]])
+          container[[k+2]] <- paste(temp223, Genes1[[k]], thingy[[k]], sep=",")
      }
-     writeLines(LOLprint(container), "test2.ddv")
+     writeLines(LOLprint(container), "Method2.ddv")
+}
+
+plotSHIT <- function(thingy) {
+#      temp2345 <- list()
+#      counter1 <- 1
+#      for(k in 1:length(ct)) {
+#           if(ct[[k]] > 0) {
+#                temp2345[[counter]] <- thingy[[k]]
+#           }
+#      }
+     
+     xt <- seq(1, length(unlist(thingy)))
+     
+     plot(xt, as.numeric(unlist(thingy)), ylim=c(0,2000), ylab="Initial Fluorescence", xlab="Run Number")
+     smoothScatter(xt, as.numeric(unlist(thingy)), ylim=c(0,2500), ylab="Initial Fluorescence", xlab="Run Number")
+          
+}
+
+fixSHIT <- function() {
+     tempGENES <- list()
+     temp33 <- list()
+     for(k in 2:length(gd[[1]][[1]])) {
+          temp33[[k-1]] <- gd[[1]][[1]][[k]][1]
+     }
+     
+     temp33 <- gsub("A", "D", temp33)
+     
+     for(k in 1:length(temp33)) {
+          for(k2 in 1:length(temp33)) {
+               if(temp33[[k2]] == gd[[1]][[1]][[k+1]][1])
+                    tempGENES[[k]] <- temp33[[k2]]
+          }
+          print(paste(k, "/", length(temp33)))
+     }
+     return(tempGENES)
 }
 

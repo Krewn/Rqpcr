@@ -12,6 +12,8 @@ m2 <- function(df){
      eff <- list() #efficiency
      ct <- list() #ct values, 'threshold cycle', according to Guescini
      r2 <- list() #R^2 value
+     tempFLUO <- list()
+     ccount <- 1
      
      for(k in 2:length(df)) { 
           tryCatch({ +
@@ -24,35 +26,45 @@ m2 <- function(df){
                eff[[k-1]] <- x$eff
                ct[[k-1]] <- x$Cy0
                r2[[k-1]] <- x$Rsq
+               
+#                if(as.integer(ct[[k-1]]) > 0) {
+#                     tempFLUO[[ccount]] <- fluo1[[k-1]]
+#                     print(tempFLUO[[ccount]])
+#                     ccount <- ccount + 1
+#                }
           }, error = function(err) {
           })
      }
-     m2Print(fluo1, gd, ct, r2)
+#      m2Print(fluo1, gd, ct, r2)
      
      #optional plots
-#      xt <- seq(1, length(unlist(fluo1)))
-#      
-#      plot(xt, as.numeric(unlist(fluo1)), ylim=c(-5000,5000), ylab="Initial Fluorescence", xlab="Run Number")
-#      
-#      smoothScatter(xt, as.numeric(unlist(fluo1)), ylim=c(-5000,5000), ylab="Initial Fluorescence", xlab="Run Number")
+     fluo2 <- list()
+     ts <- 1
+     for(k in 1:length(fluo1)) {
+          if(fluo1[[k]] > 0) {
+               fluo2[[ts]] <- fluo1[[k]]
+               ts <- ts + 1
+          }
+     }
+
+     xt <- seq(1, length(unlist(fluo2)))
+     plot(xt, as.numeric(unlist(fluo2)), ylim=c(-1000,2000), ylab="Initial Fluorescence", xlab="Run Number")
+     
+#      smoothScatter(xt, as.numeric(unlist(fluo2)), ylim=c(0,2500), ylab="Initial Fluorescence", xlab="Run Number")
 #      
 #      df1 <- data.frame(x=xt, y=as.numeric(unlist(fluo1)))
 #      ggplot(as.data.frame(df1), aes(x=x, y=y)) + ylab("Initial Template Fluorescence") + xlab("Run Number") + ggtitle("F0 vs Run #") + ylim(c(-5000,5000)) + geom_point(alpha=0.5)
 #      
 }
 
-print(fluo1)
-
 
 m2Print <- function(fluo, gd, ct, r2) {
      temp <- list()
      temp[[1]] <- "ROX_Plate_3, EvaGreen"
-     temp[[2]] <- "Chamber ID, Gene, Initial Template Fluorescence, Ct value(according to Guescini), efficiency, R^2 value"
+     temp[[2]] <- "Chamber ID, Initial Template Fluorescence, Ct value(according to Guescini), efficiency, R^2 value"
      for(k in 1:length(fluo)) {
-          temp2 <- paste(gd[[1]][[2]][[k+1]][1], gd[[1]][[2]][[k+1]][2])
-          for(k2 in 1:length(fluo)) {
-               temp[[k+1]] <- paste(temp2, gd[[1]][[1]][[k+1]][[5]], fluo[[k]], ct[[k]], r2[[k]])
-          }
+          temp2 <- paste(gd[[1]][[2]][[k+1]][1], gd[[1]][[2]][[k+1]][2], sep="-")
+          temp[[k+1]] <- paste(temp2, gd[[1]][[1]][[k+1]][[5]], fluo[[k]], ct[[k]], r2[[k]])
      }
      writeLines(LOLprint(temp),"test1.ddv")
 }
