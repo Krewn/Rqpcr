@@ -34,7 +34,7 @@ m5 <- function(data1){
 #        print(F0[[k]])
   }
 
-   printSHIT(F0)
+   printSHIT(F0,"Method: LinRegPCR", paste("Chamber ID", "Gene", "Initial Template Fluorescence", sep=","))
 #    plotSHIT(F0)
 
 }
@@ -60,26 +60,18 @@ sDeviation <- function(values, width) {
      return(E1)
 }
 
-printSHIT <- function(thingy) {
+printSHIT <- function(thingy, method, columns, name) {
      container <- list()
-     container[[1]] <- "Method: LinRegPCR"
-     container[[2]] <- paste("Chamber ID", "Gene", "Initial Template Fluorescence", sep=",")
+     container[[1]] <- method
+     container[[2]] <- columns
      for(k in 1:length(thingy)) {
           temp223 <- paste(gd[[1]][[2]][[k+1]][1], gd[[1]][[2]][[k+1]][2], sep="-")
-          container[[k+2]] <- paste(temp223, Genes1[[k]], thingy[[k]], sep=",")
+          container[[k+2]] <- paste(temp223, thingy[[k]], sep=",")
      }
-     writeLines(LOLprint(container), "Method2.ddv")
+     writeLines(LOLprint(container), name)
 }
 
 plotSHIT <- function(thingy) {
-#      temp2345 <- list()
-#      counter1 <- 1
-#      for(k in 1:length(ct)) {
-#           if(ct[[k]] > 0) {
-#                temp2345[[counter]] <- thingy[[k]]
-#           }
-#      }
-     
      xt <- seq(1, length(unlist(thingy)))
      
      plot(xt, as.numeric(unlist(thingy)), ylim=c(0,2000), ylab="Initial Fluorescence", xlab="Run Number")
