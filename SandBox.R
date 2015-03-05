@@ -5,6 +5,7 @@ source("./qpcRsources.R")                   #
 #############################################
 
 gd <- getData()
+CT <<- list()
 #LOLprint(gd)
 n <- gdToDf(gd)  
 #for(k in n){print(c(k)}
@@ -35,7 +36,6 @@ q[[1]] <- n[[4]][[1]]
 #      norms[[k]] <- (n[[4]][[k]] - n[[2]][[k]])
 # }
 
-# m2(q) #run the second method with the normalized data
 # Genes1 <<- list()
 # fixSHIT <- function() {
 #      tempGENES <- list()
@@ -66,12 +66,24 @@ q[[1]] <- n[[4]][[1]]
 # }
 # 
 # Genes1 <<- fixSHIT()
+m7Fluo <- list()
+m5Fluo <- list()
+m6Fluo <- list()
 
-#m5(q)
-m6(q, 30)
+m7Fluo <- m2(q)
+m5Fluo <- m5(q)
+m6Fluo <- m6(q, 30)
+
+par(mar=c(5.1, 4.1, 4.1, 8.1), xpd=TRUE)
+xt <- seq(1, length(unlist(m5Fluo)))
+plot(xt, as.numeric(unlist(m5Fluo)), ylim=c(0,2000), ylab="Initial Fluorescence", xlab="Run Number", col="red")
+xt <- seq(1, length(unlist(m6Fluo)))
+points(xt, as.numeric(unlist(m6Fluo)), col="green")
+legend("topright", inset=c(-0.2,0), legend=c("LinRegPCR","LRE-Emax"), pch=c(1,1), col=c("red", "green"), title="Method")
 
 
-
-
-
-
+xt <- seq(1, length(unlist(m5Fluo)))
+plot(xt, as.numeric(unlist(m5Fluo)), ylim=c(0,2000), ylab="Initial Fluorescence", xlab="Run Number", col="red")
+xt <- seq(1, length(unlist(m7Fluo)))
+points(xt, as.numeric(unlist(m7Fluo)), col="blue")
+legend("topright", inset=c(-0.2,0), legend=c("LinRegPCR","Cy0"), pch=c(1,1), col=c("red", "blue"), title="Method")

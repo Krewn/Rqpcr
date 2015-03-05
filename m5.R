@@ -26,17 +26,35 @@ m5 <- function(data1){
   for(k in 1:length(Eff)) {
        Efficiency[[k]] <- sDeviation(Eff[[k]], 4)
        temp2[[k]] <- Cq
-#        print(Efficiency[[k]])
   }
   
   for(k in 1:length(Efficiency)) {
        F0[[k]] <- as.integer(data1[[k]][[temp2[[k]]]])/(as.integer(Efficiency[[k]]^temp2[[k]]))
-#        print(F0[[k]])
   }
 
-   printSHIT(F0,"Method: LinRegPCR", paste("Chamber ID", "Gene", "Initial Template Fluorescence", sep=","))
+   printSHIT(F0,"Method: LinRegPCR", paste("Chamber ID", "Gene", "Initial Template Fluorescence", sep=","), "LinRegPCRFULL.ddv")
 #    plotSHIT(F0)
+     
+     tempCont <- list()
+     tempCounter <- 1
+     smallFluo <- list()
+     
+     tempCont[[1]] <- "Method: LinRegPCR"
+     tempCont[[2]] <- paste("Chamber ID", "Initial Template Fluorescence")
+     for(k in 1:length(F0)) {
+          tryCatch({ 
+               if(CT[[k]] > 0) {
+                    temp223 <- paste(gd[[1]][[2]][[k+2]][1], gd[[1]][[2]][[k+2]][2], sep="-")
+                    tempCont[[tempCounter+2]] <- paste(temp223, F0[[k+1]], sep=",")
+                    smallFluo[[tempCounter]] <- F0[[k+1]]
+                    tempCounter <- tempCounter + 1
+               }
+          }, error = function(err) {
+          })
+     } 
+     writeLines(LOLprint(tempCont), "LinRegPCR.ddv")
 
+     return(smallFluo)
 }
 
 sDeviation <- function(values, width) {
