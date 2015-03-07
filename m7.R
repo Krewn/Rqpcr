@@ -23,12 +23,7 @@ m7 <- function(df){
                ct[[k-1]] <- x$Cy0
                r2[[k-1]] <- x$Rsq
                CT[[k-1]] <<- ct[[k-1]]
-               
-               #                if(as.integer(ct[[k-1]]) > 0) {
-               #                     tempFLUO[[ccount]] <- fluo1[[k-1]]
-               #                     print(tempFLUO[[ccount]])
-               #                     ccount <- ccount + 1
-               #                }
+
           }, error = function(err) {
           })
      }

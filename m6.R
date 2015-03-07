@@ -1,6 +1,7 @@
 #############################################
 #Packae is liscnesed by                     #
 #  KrewnSolotions   /< /? [- \/\/ |\|       #
+
 #############################################
 
 #  Evaluation was executed through sigma curve software.
@@ -14,9 +15,6 @@ m6 <- function(data1, cCount){
      Fmax <- list() #max value?
      c <- cCount #cycle count
      
-     if(CT[[10]] > 0 ) {
-          print("hi")
-     }
      for(k in 2:length(data1)) { #get Fmax value
           tempFlag <- 0
           for(k2 in 1:length(data1[[k]])) {
@@ -30,16 +28,17 @@ m6 <- function(data1, cCount){
      
      for(k in 2:length(data1)) { #calculates efficiency for each cycle
           Eff[[k-1]] <- list()
-          tempFlag <- 100000000
+          tempFlag <- 0
           for(k2 in 2:8) { #for(k2 in 2:length(data1[[k]])) {
                Eff[[k-1]][[k2-1]] <- ((data1[[k]][[k2]])/(data1[[k]][[k2-1]]) - 1)
-               if(Eff[[k-1]][[k2-1]] < tempFlag) {
+               if(Eff[[k-1]][[k2-1]] > tempFlag) {
                     EffMax[[k-1]] <- Eff[[k-1]][[k2-1]]
                     tempFlag <- EffMax[[k-1]]
                }
           }
      }
      print("Done calculating efficiency")
+     print(length(EffMax))
      
      for(k in 1:length(EffMax)) {
           F0[[k]] <- Fmax[[k]]/(1+((Fmax[[k]]/data1[[k+1]][[c]]) - 1)*(EffMax[[k]]+1))^c
@@ -50,7 +49,7 @@ m6 <- function(data1, cCount){
      tempCont <- list()
      tempCounter <- 1
      smallFluo <- list()
-
+     
      tempCont[[1]] <- "Method: LRE-Emax"
      tempCont[[2]] <- paste("Chamber ID", "Initial Template Fluorescence")
      for(k in 1:length(F0)) {
@@ -64,9 +63,9 @@ m6 <- function(data1, cCount){
           }, error = function(err) {
           })
      } 
-
+     
      writeLines(LOLprint(tempCont), "LRE-Emax.ddv")
-
+     
      return(smallFluo)
-
+     
 }
