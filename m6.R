@@ -4,10 +4,7 @@
 
 #############################################
 
-#  Evaluation was executed through sigma curve software.
-#To fit the exponential part of the curve, optimally, we need to know exactly where the exponential phase of the PCR ends. Previous work suggested that the first positive second derivative maximum... 
-#< comparison of linear and non-linear fits. < this should be fun to tackle > >
-#  http://www.ncbi.nlm.nih.gov/pmc/articles/PMC2665230/  
+#http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3047581/
 m6 <- function(data1, cCount){
      F0 <- list() #initial template fluorescence
      Eff <- list() #Linear regression of En versus Fn fitted to the largest possible window, defined by the difference to averaged F0 values
