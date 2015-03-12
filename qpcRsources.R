@@ -19,6 +19,7 @@ source("./misc.R")
 source("./haim.R")
 
 source("./m1.R")
+source("./m1c.R")
 source("./m2.R")
 source("./m3.R")
 source("./m4.R")
@@ -26,4 +27,5 @@ source("./m5.R")
 source("./m6.R")
 source("./m7.R")
 source("./m8.R")
+source("./m9.R")
 
