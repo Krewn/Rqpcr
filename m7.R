@@ -42,7 +42,6 @@ m7 <- function(df){
                     tempCont[[tempCounter+2]] <- paste(temp223, fluo1[[k]], sep=",")
                     smallFluo[[tempCounter]] <- fluo1[[k]]
                     tempCounter <- tempCounter + 1
-                    print(smallFluo[[tempCounter-1]])
                }
           }, error = function(err) {
           })

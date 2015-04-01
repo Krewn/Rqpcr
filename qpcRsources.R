@@ -12,6 +12,7 @@ library(qpcR)
 library(rgl)
 library(ggplot2)
 
+source("./CT.R")
 source("./fits.R")
 source("./qpcrFileIO.R")
 source("./Rqpcr.R")

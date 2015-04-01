@@ -22,25 +22,32 @@ n <- gdToDf(gd)
 q <- n[[4]][2:length(n[[4]])] - n[[2]][2:length(n[[2]])]
 q[[1]] <- n[[4]][[1]]
 
-# m1c(q)
-# t1 <- c(1, 4, 9, 16, 25, 36)
-# t2 <- derivative(t1)
-# xt <- seq(1, length(unlist(t2)))
-# plot(t1)
-# lines(xt, t2)
-
-
 # m9(q)
+# D(expression(x^3-6*x^2), 'x') 
+# which.max(diff(diff(q[[10]])))
+
+# xyr <- D(expression(14252/(1+exp((-1/274.5315)*(x-893)))), 'x')
+# 
+# D2 <- D(xyr, 'x')
+# 
+# f = function(x) eval(D2)
+# tr <- uniroot(f,c(0,1000))
+# 
+# print(tr$root)
+
 
 m5Fluo <- list()
 m6Fluo <- list()
 m7Fluo <- list()
+m8Fluo <- list()
 
 m7Fluo <- m7(q)
 m5Fluo <- m5(q)
-m6Fluo <- m6(q, 30)
+m6Fluo <- m6(q)
+m8Fluo <- m8(q)
 
-m7Fluo[[911]] <- NULL
 
 plot(log(unlist(m7Fluo)), log(unlist(m5Fluo)), xlab="Cy0 Method", ylab="LinRegPCR")
 plot(log(unlist(m7Fluo)), log(unlist(m6Fluo)), xlab="Cy0 Method", ylab="LRE-Emax")
+plot(log(unlist(m7Fluo)), log(unlist(m8Fluo)), xlab="Cy0 Method", ylab="5PSM")
+plot(log(unlist(m5Fluo)), log(unlist(m8Fluo)), xlab="LinRegPCR", ylab="5PSM")
