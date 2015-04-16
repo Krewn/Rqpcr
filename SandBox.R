@@ -35,13 +35,20 @@ q[[1]] <- n[[4]][[1]]
 # 
 # print(tr$root)
 
-
+# m3Fluo <- list()
+# m4Fluo <- list()
 m5Fluo <- list()
 m6Fluo <- list()
-m7Fluo <- list()
+#m7Fluo <- list()
 m8Fluo <- list()
 
-m7Fluo <- m7(q)
+m9Fluo <- list()
+m9Fluo <- m9(q)
+
+
+# m3Fluo <- m3(q)
+# m4Fluo <- m4(q)
+#m7Fluo <- m7(q)
 m5Fluo <- m5(q)
 m6Fluo <- m6(q)
 m8Fluo <- m8(q)

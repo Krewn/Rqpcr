@@ -3,12 +3,30 @@
 #  KrewnSolotions   /< /? [- \/\/ |\|       #
 #############################################
 
-#The gold standard method for estimating DNA concentrations via qPCR is quantification cycle () standard curve quantification, which requires the time- and labor-intensive construction of a  standard curve. 
-
-#Based on multiple verification through several labs running dilutions of independent sequences “MAK2-fitting is as reliable as  standard curve quantification for a variety of DNA targets and a wide range of concentrations.”
-
-#(Pretty much disregards data past the inflection point.) Phase 1 of 3 provides 
-
-#http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0017636
-m4 <- function(gotData){
+#http://www.ncbi.nlm.nih.gov/pubmed/22102586
+m4 <- function(data1){
+     Fmax <- list() #max fluo value
+     baseF <- list() #base fluo. value
+     nFlex <- list() #inflection point of curve
+     b <- list() #slope of the curve at nFlex
+     Fn <- list() #list of lists for fit values
+     
+     for(k in 2:length(data1)) {
+          Fmax[[k-1]] <- max(data1[[k]])
+          baseF[[k-1]] <- data1[[k]][[1]]
+          nFlex[[k-1]] <- which.max(diff(diff(data1[[k]])))
+          b[[k-1]] <- (data1[[k]][[nFlex[[k-1]]]])/(data1[[k]][[nFlex[[k-1]] + 1]])
+          
+          Fn[[k-1]] <- list()
+          for(k2 in 1:length(data1[[k]])) {
+               Fn[[k-1]][[k2]] <- baseF[[k-1]] + ((Fmax[[k-1]] - baseF[[k-1]])/(1 + (k2/nFlex[[k-1]])^b[[k-1]]))
+          }
+          
+          if(k==10) {
+               xtr <- seq(1, length(Fn[[k-1]]))
+               print(data1[[k]])
+               plot(data1[[k]])
+               lines(xtr, Fn[[k-1]])
+          }
+     }
 }                        
