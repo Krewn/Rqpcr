@@ -1,47 +1,137 @@
-#############################################
-#Packae is liscnesed by                     #
-#  KrewnSolotions   /< /? [- \/\/ |\|       #
-#############################################
-m1 <- function(gotData){
-     f0 <- list() #initial target quantity expressed in fluorescence units at cycle 0
-     c <- list() #fractional cycle at which reaction fluorescence reaches half of fMax
-     b <- list() #inflection point
-     data <- list()
-     bkgd <- list() #background data 
-     fMax <- list() #maximal reaction fluorescence per run/35 cycles
-     
-     bkgd <- gotData[[1]][["Bkgd Data for Probe EvaGreen"]][2:length(gotData[[1]][["Bkgd Data for Probe EvaGreen"]])]
-     
-     data <- gotData[[1]][["Raw Data for Probe EvaGreen"]][2:length(gotData[[1]][["Raw Data for Probe EvaGreen"]])]
-     
-     for(k in 1:length(data)) { #get the max value of the run/35 cycles
-          temp <- length(data[[k]])
-          fMax[[k]] <- max(unlist(data[[k]][[3]]:data[[k]][[temp]]))
-     }
-     
-     flag <- list()
-     for(k in 1:length(data)) { #This loop + next calculates value of c
-          flag[[k]] <- 1
-          for(k2 in 3:length(data[[k]])) {
-               if(k >= (as.integer(fMax[[k]])/2)) {
-                    break
-               }
-               flag[[k]] <- as.integer(flag[[k]]) + 1
-          }
-     }
-     
-     for(k in 1:length(data)) { #assigns value of C
-          c[[k]] <- (31) + ((fMax[[k]]/2) - as.integer(data[[k]][[31]]))/
-               (as.integer(data[[k]][[32]]) - as.integer(data[[k]][[31]]))
-     }
-     
-     for(k in 1:length(c)) {
-          print(c[[k]])
-     }
-     #      for(k in 2:length(data)) {
-     #           f0[k-1] <- (fMax[k-1]/(1+exp(c/b)))
-     #      }
-     
-     #Fx = (Fmax/(1+exp(-(1/b)(x-c)))+Fb) #reaction fluorescence at cycle x
-     return(0)
+source("./ryacasTools.R")
+source("./qpcRsources.R")
+library(Ryacas)
+kcy0 <- function(probe,cycles,p=F){
+  Fmax = max(df[[k]])
+  fb = mean(probe[1:5])
+  c<-which.max(diff(probe))
+  # or Fmax = 2*probe[c]-fb
+  e = exp(1)
+  print("oh")
+#   for(k in 1:length(probe)){
+#     if(probe[[k]]>Fmax/2){
+#       c = (k-1+(Fmax/2-probe[[k-1]])/(probe[[k]]-probe[[k-1]]))
+#       print("!!!!")
+#       print(c)
+#       break
+#     }
+#   }
+  c<-which.max(diff(probe))
+  b<-kscf(probe,cycles,getb=T)
+  if(b==0){
+    return(0)
+  }
+  tcBlock = tryCatch({
+    fit <<- nls(probe ~ Fmax/(1 + e^((-1/b)*(cycles-c)))^d+fb , start = list(d=0),#5 pram fit with Richard's coeficent on the denominator
+              control = list(maxiter = 50, tol = 1e-05, minFactor = 1/1024,printEval = F, warnOnly = T))
+    td  <<- F
+  }, warning = function(w) {
+    print(w)
+  }, error = function(e) {
+    print(e)
+    td <<- T
+  }, finally = {
+    print(paste("Fitsuccess :",!td))
+  }
+  )
+  print("yeah")
+  d <- coefficients(fit)[["d"]]
+  print(d)
+  cy0 <- c+b*log(d)-b*(d+1/d)*(1-(fb/Fmax)*(d+1/d)^d)
+#   firstD = D(expression(Fmax/(1 + e^((-1/b)*(x-c)))),'x')
+#   print(firstD)
+#   secdD = D(firstD,'x')
+#   p = uniroot(function(x)eval(secdD),c(0,10000))$root
+#   print(">>>>>>>>>>>=")
+#   print(p)
+#   print(">>>>>>>>>>>-")
+#   f0 = Fmax/(1+e^(coefficients(fit)[["c"]]/coefficients(fit)[["b"]]))
+  print(paste("cy0 > >>>>>",cy0))
+  return(cy0)
+}
+
+kscf <- function(probe,cycles,p=F,getb=F){
+  # df[[k]] will be the cell assay pair fluorescence vector.
+  # we have cycles already
+  # for given cycle x fluo  fx =  Fmax/(1 + e^((-1/b)*(x-c)) ) + Fb
+  Fmax = max(probe)
+  e = exp(1)
+  print(typeof(probe))
+  #print(probe)
+  print(probe[1:5])
+  fb = mean(probe[1:5])
+  #print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+  #print(fb)
+  td <<- F
+  #fit = nls(probe ~ Fmax/(1 + e^((-1/b)*(cycles-c))+fb ) , start = list(b=1 , c = 1 ))
+  inflec = which.max(diff(probe))
+  c=1
+  halfMax = Fmax/2
+  while(probe[[c]]<halfMax){
+    print(c)
+    c = c + 1
+  }
+  print("wtf OG")
+  if(c>1){
+    c = c-1
+    c = c + (halfMax-probe[[c]])/(probe[[c+1]]-probe[[c]])
+    print(c)
+  }else{
+    print("fail : c0 > fMax/2")
+    return(0)
+  }
+  tcblock = tryCatch({
+      fit <<- nls(probe ~ Fmax/(1 + e^((-1/b)*(cycles-c)) )+fb , start = list(b=probe[inflec+1]-probe[inflec]),
+                  control = list(maxiter = 50, tol = 1e-05, minFactor = 1/1024 ,printEval = F, warnOnly = T))
+      td  <<- F
+    }, warning = function(w) {
+      print(w)
+    }, error = function(e) {
+      print(e)
+      td <<- T
+    }, finally = {
+      print(paste("Fitsuccess :",!td))
+    }
+  )
+  if(td){
+    return(0)
+    print("phyce")
+  }
+  if(getb){
+    return(coefficients(fit)[["b"]])
+  }
+  #fit = nls(probe ~ Fmax/(1 + e^((-1/b)*(cycles-c))+fb ) , start = list(b=1 , c = 1 ))
+  if(p){
+    plot(cycles,probe)
+    n = data.frame(x = seq(min(cycles),max(cycles),len=max(cycles)) )
+    q = predict(fit,n$x)
+    lines(n$x,q)
+    print("wudUP")
+  }
+  f0 = Fmax/(1+e^(c/coefficients(fit)[["b"]]))
+  print(paste(">>>>>>",f0))
+  return(f0)
+}
+
+m1 <- function(probe,verbose = F, cyo = F){# data.frame()
+  scflist <- list()
+  cy0list <- list()
+  print(df[[1]])
+  cycles <- df[[1]]
+  print(paste(max(cycles)," qpcrCycles", sep = ""))
+  scflist[[1]] = NULL
+  cy0list[[1]]=NULL
+  for(k in 2:length(probe)) {
+    if(verbose){
+      print(paste(k,"  /  ",length(probe),sep = ""))
+    }
+    scflist[[k]] = kscf(probe[[k]],cycles,p=T)
+    cy0list[[k]] = kcy0(probe[[k]],cycles,p=T)
+  }
+  #print("woot")
+  if(cy0){
+    return(cy0list))
+  }else{
+    return(scflist)
+  }
 }
